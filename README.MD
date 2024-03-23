@@ -104,7 +104,7 @@ To changed configuration can be done by using text editor like (vim, nano, etc).
 |-----------|-----------|--------------|-------------|---------------------------|
 | tcp_std   | 1-65535   | number-array | [80,8080]   |server port of tcp plain protocol |
 | tcp_ssl   | 1-65535   | number-array | [443, 4433] |server port of tcp  with ssl protocol |
-| identifier | 1-256 (cant't be empty)	| sensitive-string	| noobz-id.github.io | used for packet tagging signature/identifier for your server, you can put whatever for value like (domain/email/etc). make sure your client know this identifier, if not your user will never connected to your server |
+| identifier | 1-256 (cant't be empty)	| sensitive-string (a-z,0-9,A-Z,.,-)	| noobz-id.github.io | used for packet tagging signature/identifier for your server, you can put whatever for value like (domain/email/etc). make sure your client know this identifier, if not your user will never connected to your server |
 | banner	| 0-1000 | any-string	| 	https://github.com/noobz-id/noobzvpns	|	send banner message for user when use your server like (note, text-ads, or anything)	|
 | ssl_cert  | can't be empty | string-path | "/etc/noobzvpns/cert.pem"| ssl certificate, you can create self-signed certificate on your own. or using letsencrypt/certbot as alternative |
 | ssl_key   | can't be empty  | string-path | "/etc/noobzvpns/key.pem" | ssl privatekey, both ssl_cert & ssl_key you can create your own. or using free alternative like letsencrypt with certbot |
