@@ -6,7 +6,7 @@
 		443
 	],
 	"identifier": "noobz-id.github.io",
-	"banner": "https://github.com/noobz-id/noobzvpns",
+	"banner": "Congratulations, you are connected to the NoobzVpn server.",
 	"ssl_cert": "/etc/noobzvpns/cert.pem",
 	"ssl_key": "/etc/noobzvpns/key.pem",
 	"ssl_version": "AUTO",
