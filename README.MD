@@ -21,13 +21,10 @@ Like other VPN this app just bypass network traffic like tcp,udp including dns. 
 
 # Guide
 
-### Minimum Requiment :
-* Linux x86_64 with systemd init.
-* 1 Core CPU, 512MB RAM, 500MB Disk Available (my extreme test)
-* For other Linux with CPU x86(32bit), arm, arm64 server you can request and join beta test.
-* For other init system, you can contribute this project to create/add support for other init system like s6, SysV, runit, OpenRC, etc...
-
-### Installation :
+### Minimum Requirements :
+* Most all Linux Distribution with systemd is supported.
+* CPU: x86_64(amd64), arm64(aarch64). 1 Core CPU. 512MB RAM. 
+ ### Installation :
 * follow this step with **root user / root access** (sudo/doas/etc)
 ##### Debian / Ubuntu / other Debian Base
 ```bash
@@ -56,7 +53,7 @@ Like other VPN this app just bypass network traffic like tcp,udp including dns. 
 ### Manage Service:
 
 ##### Start Service
-* start service, you need to start it after installation to run noobzvpns service
+* start service, you need to start it after installation to run noobzvpns service to serve the tunnel or to manage users database.
 #
 ```bash
 systemctl start noobzvpns.service
@@ -98,13 +95,17 @@ journalctl -u noobzvpns.service
 
 
 ### Configuration :
-* `/etc/noobzvpns/config.json`
+To changed configuration can be done by using text editor like (vim, nano, etc).
+```
+/etc/noobzvpns/config.json
+```
 
-* 
 |   key     |   range   |   type       | example     |   description             |
 |-----------|-----------|--------------|-------------|---------------------------|
 | tcp_std   | 1-65535   | number-array | [80,8080]   |server port of tcp plain protocol |
 | tcp_ssl   | 1-65535   | number-array | [443, 4433] |server port of tcp  with ssl protocol |
+| identifier | 1-256 (cant't be empty)	| sensitive-string	| noobz-id.github.io | used for packet tagging signature/identifier for your server, you can put whatever for value like (domain/email/etc). make sure your client know this identifier, if not your user will never connected to your server |
+| banner	| 0-1000 | any-string	| 	https://github.com/noobz-id/noobzvpns	|	send banner message for user when use your server like (note, text-ads, or anything)	|
 | ssl_cert  | can't be empty | string-path | "/etc/noobzvpns/cert.pem"| ssl certificate, you can create self-signed certificate on your own. or using letsencrypt/certbot as alternative |
 | ssl_key   | can't be empty  | string-path | "/etc/noobzvpns/key.pem" | ssl privatekey, both ssl_cert & ssl_key you can create your own. or using free alternative like letsencrypt with certbot |
 | ssl_version | SSLv2, SSLv23, TLSv1_1, TLSv1_2, TLSv1_3, AUTO | string-unsensitive-case | AUTO | select spesific SSL/TLS version or set to AUTO for automatic selection (recommended, be flexible to client) |
@@ -126,97 +127,99 @@ You can change it using your own certificate or free certificate from [Let's Enc
 
 
 ### User Account
-Managing user(s) its simple and done by command line, adding user, set expired days, etc. you need a ***root user / root access*** to do this.
+* Managing user(s) its simple and done by command line like adding/editing user, set expired days, max device login, max bandwidth, etc.
+*  you need a ***root user / root access*** to do this.
+*  ***make sure to start the noobzvpns.service first before manage the account***
 
-##### Add User
-Register / Add new User followed by Password
-```bash
-noobzvpns --add-user [username] [password]
 ```
-* username maximum is 16 characters 
-* only allow characters (A-Z a-z 0-9 . - _ @)
-* password must be filled with any characters and make sure to keep strong enough
+Usage(normal): noobzvpns [action]
+Usage(json): noobzvpns --json [action]
 
-##### Block User
-Blocking registered user for disable tunneling service
-```bash
-noobzvpns --block-user [username]
-```
-* only registered user you can do this
+[action]:
+--add USERNAME [args] [..] : add new account.
+--edit USERNAME [args] [..] : edit existing account.
+--rename USERNAME NEW_USERNAME [..] : change existing account username.
+--block USERNAME [..] : blocking existing account.
+--unblock USERNAME [..] : unblocking existing account.
+--reset USERNAME [..] : reset account expired day (renew) & statistics.
+--remove USERNAME [..] : remove existing account.
+--print-user USERNAME [..] : print account info & statistics.
+--print-all-user [..] : print all accounts info & statistics.
+--opts [opts] [..] : most dangerous operations & no connfirmation.
 
-##### Unblock User
-Unblocking blocked registered user to allow user for tunneling service
-```bash
-noobzvpns --unblock-user [username]
-```
-* only registered user you can do this
+[args]: (--add & --edit)
+-p,-password PASSWORD : give the account password. (required in --add).
+-e,-expired DAYS : give the account expiration. default: 0 = unlimited.
+-d,-device UNITS : give the allowed max login device. default: 0 = unlimited.
+-b,-bandwidth GIGA_BYTES : give the allowed max bandwidth. default: 0 = unlimited.
 
-##### Set Expiration
-setup for expiration days per-user
-```bash
-noobzvpns --expired-user [username] [days]
-```
-* only registered user you can set this
-* **0** : unlimited days (no expiration)
-* **1-n** : limited by days
+[opts]: (--opts).
+-reset-all : reset all issued date (renew-expired) & statistic for all accounts.
+-remove-all : WARNING! remove all accounts in database
 
-##### Renew Expiration
-Re-new issued date, when user has expired you can re-new the expiration by updating issued date.
-```bash
-noobzvpns --renew-user [username]
-```
-* only registered user you can do this
-
-##### Change Password
-Change password for registered user
-```bash
-noobzvpns --password-user [username] [new_password]
-```
-* only registered user you can do this
-
-##### Rename User
-Change username for registered user
-```bash
-noobzvpns --rename-user [old_username] [new_username]
-```
-* only registered user you can do this
-
-##### Remove User
-Remove/Delete for registered user
-```bash
-noobzvpns --remove-user [username]
-```
-* only registered user you can do this
-
-##### Remove All User
-***WARNING*** clean up / remove all registered user(s), be careful this action can't be undone and no confirmation after executed.
-```bash
-noobzvpns --remove-all-user
+[..]: continuous [action]
+noobzvpns [action] [action] ...
 ```
 
-##### Info User
-Get specific Info for registered user, like password, issued date, expiration days, status (block/expired/active).
-```bash
-noobzvpns --info-user [username]
+#####  Examples:
+* this is example for you to understand how the command-line users manager works.
 ```
-* only registered user you can do this
+1. add new unlimited account + password
+noobzvpns --add USERNAME -p SeCuRePaSsWoRd000
+# or
+noobzvpns --add USERNAME -password SeCuRePaSsWoRd000
+
+2. add new account + password + max 2 devices + max bandwidth 20 Giga Bytes + expired 30 day
+noobzvpns --add USERNAME -p SeCuRePaSsWoRd000 -d 2 -b 20 -e 30
+# or
+noobzvpns --add USERNAME -password SeCuRePaSsWoRd000 -device 2 -bandwidth 20 -expired 30
+
+3. edit existing account password + max 4 devices
+noobzvpns --edit USERNAME -p SeCuRe123 -d 4
+# or
+noobzvpns --edit USERNAME -password SeCuRe123 -device 4
+
+4. rename account
+noobzvpns --rename USERNAME NEW_USERNAME
+
+5. block account
+noobzvpns --block USERNAME
+
+6. unblock account
+noobzvpns --unblock USERNAME
+
+7. reset account
+# use for renew issued date, and reset the bandwidth usage
+noobzvpns --reset USERNAME
+
+8. remove account
+# use for remove account
+noobzvpns --remove USERNAME
+
+9. print specific accout
+# git info only specific account
+noobzvpns --print-user USERNAME 
+
+10. print all user database
+# get info for all registered account
+noobzvpns --print-all-user
+
+11. reset all accounts
+# WARNING ! reset/renew issued date, bandwidth usage, etc for all registered accounts in database. be carefull this action can't be undone
+noobzvpns --opts -reset-all
+
+12. remove all accounts
+# WARNING !!! remove all registered accounts in database. be carefull this action can't be undone.
+noobzvpns --opts -remove-all
 
 
-##### Info All Users
-Get Info All about registered users like password, issued date, expiration days, status (block/expired/active).
-```bash
-noobzvpns --info-all-user
 ```
 
 ##### NOTE :
-* You can combine commands above, just for example:
-```bash
-# noobzvpns --add-user [username] [password] --expired-user [username] [days]
-noobzvpns --add-user Admin-123 SeCuRePaSsWoRd456 --expired-user Admin-123 30
-```
 * for offline guide commands you just execute ```noobzvpns``` in your terminal / ssh and see the guide.
+*  you need json-output for output result in command-line ?.  hopefully we add the **--json** options in command-line. just add it before **[action]**. ```noobzvpns --json [action]``` so the output/stdout will print as json in single-line format. the command-line process if success will return ```0``` any of that just fail/error/death.
 * HIDDEN Command just for testing / debugging. maybe not for you, just ignore it :)
-```bash
+```
 noobzvpns --start-service --debug
 ```
 

@@ -5,6 +5,8 @@
 	"tcp_ssl": [
 		443
 	],
+	"identifier": "noobz-id.github.io",
+	"banner": "https://github.com/noobz-id/noobzvpns",
 	"ssl_cert": "/etc/noobzvpns/cert.pem",
 	"ssl_key": "/etc/noobzvpns/key.pem",
 	"ssl_version": "AUTO",

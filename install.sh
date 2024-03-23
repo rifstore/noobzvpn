@@ -24,13 +24,18 @@ if [ `id -u` != "0" ]; then
 fi
 
 case $MACHINE in
-    "x86_64")
-        BINARY_ARCH="noobzvpns.x86_64"
-        ;;
+    "x86_64" | "amd64")
+        # Intel (x86_64), AMD (amd64), etc CPU
+        BINARY_ARCH="noobzvpns.x86-64"
+    ;;
+    "aarch64" | "arm64")
+        # ARM-64bit base CPU
+        BINARY_ARCH="noobzvpns.aarch64"
+    ;;
     *)
         echo "Error at installation, unsuported cpu-arch $MACHINE"
         exit 1
-        ;;
+    ;;
 esac
 
 echo "CPU-Arch: $MACHINE, Binary: $BINARY_ARCH"
