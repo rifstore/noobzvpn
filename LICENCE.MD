@@ -2,14 +2,14 @@
 
 ### NoobzVpn-Server :
 * NoobzVpn-Server contains multi-licences:
-	* **noobzvpns** executable is **prorietary** binary owned by **Noobz-ID** except the 3rd libraries (3rd licences on bottom) used in **noobzvpns** 
+	* **noobzvpns** executable is **proprietary** binary owned by **Noobz-ID** except the 3rd libraries (3rd licences on bottom) used in **noobzvpns** 
 	* **others** components is GPLv2 licences like: installer scripts, etc.
 * **Noobz-ID** (the owner of **NoobzVpn-Server** and **NoobzVpn-Client**) does not  allow  any modifications to the **proprietary** file/software. you can pull request to add new features or report weird bugs.
 * **Noobz-ID** not guaranteed any effect/action for using this software. believe me, this is just tunneling packet no malware, minning or collect/send data to third party, etc, unless you use pirated/hijack version of this software (still not believe? don't use it). **DWYOR !!!**
 
 ### SIMPLESON
 * Json parser library used in **noobzvpns**
-* Website: [Github](https://github.com/gregjesl/simpleson)
+* Website: [https://github.com/gregjesl/simpleson](https://github.com/gregjesl/simpleson)
 
 ```
 MIT License
@@ -56,7 +56,7 @@ SOFTWARE.
 ```
 
 ### LIBEV :
-* Event IO used in **noobzvpns**
+* Bare metal Event IO used in **noobzvpns**
 * Website: [http://software.schmorp.de/pkg/libev.html](http://software.schmorp.de/pkg/libev.html)
 ```
 libev is a high-performance event loop/event model with lots of features.  
@@ -112,7 +112,7 @@ Chris Brody
 ```
 
 ### WOLFSSSL:
-* SSL Library used in **noobzvpns**
+* SSL/TLS & Encryption Library used in **noobzvpns**
 * Website: [https://www.wolfssl.com/](https://www.wolfssl.com/)
 ```
 wolfSSL (formerly known as CyaSSL) and wolfCrypt are either licensed for use  
